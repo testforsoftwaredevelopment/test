@@ -92,8 +92,21 @@ public class Ship extends Entity {
 		this.positionX -= SPEED * this.shipEffect.moveEffect();
 	}
 
-	public final void moveTop() { this.positionY -= SPEED * this.shipEffect.moveEffect(); }
-	public final void moveBottom() { this.positionY += SPEED * this.shipEffect.moveEffect(); }
+	/**
+	 * Moves the ship speed uni ts up, or until the up screen border is
+	 * reached.
+	 *
+	 * jtaejune : 스턴 아이템을 먹으면 속도가 0이 됨.
+	 */
+	public final void moveUp() { this.positionY -= SPEED * this.shipEffect.moveEffect(); }
+
+	/**
+	 * Moves the ship speed uni ts down, or until the down screen border is
+	 * reached.
+	 *
+	 * jtaejune : 스턴 아이템을 먹으면 속도가 0이 됨.
+	 */
+	public final void moveDown() { this.positionY += SPEED * this.shipEffect.moveEffect(); }
 
 	/**
 	 * Shoots a bullet upwards.

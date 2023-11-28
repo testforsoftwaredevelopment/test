@@ -302,9 +302,9 @@ public class GameScreen extends Screen {
 							|| inputManager.isKeyDown(KeyEvent.VK_D);
 					boolean moveLeft = inputManager.isKeyDown(KeyEvent.VK_LEFT)
 							|| inputManager.isKeyDown(KeyEvent.VK_A);
-					boolean moveTop = inputManager.isKeyDown(KeyEvent.VK_UP)
+					boolean moveUp = inputManager.isKeyDown(KeyEvent.VK_UP)
 							|| inputManager.isKeyDown(KeyEvent.VK_W);
-					boolean moveBottom = inputManager.isKeyDown(KeyEvent.VK_DOWN)
+					boolean moveDown = inputManager.isKeyDown(KeyEvent.VK_DOWN)
 							|| inputManager.isKeyDown(KeyEvent.VK_S);
 					boolean isRightBorder = this.ship.getPositionX()
 							+ this.ship.getWidth() + this.ship.getSpeed() > this.width - 1;
@@ -323,11 +323,11 @@ public class GameScreen extends Screen {
 						if (moveLeft && !isLeftBorder) {
 							this.ship.moveLeft();
 						}
-						if (moveTop && !isTopBorder) {
-							this.ship.moveTop();
+						if (moveUp && !isTopBorder) {
+							this.ship.moveUp();
 						}
-						if (moveBottom && !isBottomBorder) {
-							this.ship.moveBottom();
+						if (moveDown && !isBottomBorder) {
+							this.ship.moveDown();
 						}
 					} else {
 						if (moveRight && !isLeftBorder) {
@@ -336,11 +336,11 @@ public class GameScreen extends Screen {
 						if (moveLeft && !isRightBorder) {
 							this.ship.moveLeft();
 						}
-						if (moveTop && !isBottomBorder) {
-							this.ship.moveTop();
+						if (moveUp && !isBottomBorder) {
+							this.ship.moveUp();
 						}
-						if (moveBottom && !isTopBorder) {
-							this.ship.moveBottom();
+						if (moveDown && !isTopBorder) {
+							this.ship.moveDown();
 						}
 					}
 					if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
