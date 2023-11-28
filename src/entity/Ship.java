@@ -72,7 +72,7 @@ public class Ship extends Entity {
 	}
 
 	/**
-	 * Moves the ship speed uni ts right, or until the right screen border is
+	 * Moves the ship speed units right, or until the right screen border is
 	 * reached.
 	 *
 	 * jtaejune : 스턴 아이템을 먹으면 속도가 0이 됨.
@@ -93,7 +93,7 @@ public class Ship extends Entity {
 	}
 
 	/**
-	 * Moves the ship speed uni ts up, or until the up screen border is
+	 * Moves the ship speed units up, or until the up screen border is
 	 * reached.
 	 *
 	 * jtaejune : 스턴 아이템을 먹으면 속도가 0이 됨.
@@ -101,7 +101,7 @@ public class Ship extends Entity {
 	public final void moveUp() { this.positionY -= SPEED * this.shipEffect.moveEffect(); }
 
 	/**
-	 * Moves the ship speed uni ts down, or until the down screen border is
+	 * Moves the ship speed units down, or until the down screen border is
 	 * reached.
 	 *
 	 * jtaejune : 스턴 아이템을 먹으면 속도가 0이 됨.
