@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 import entity.Coin;
 import screen.*;
-
+//setstjaslgjs
 /**
  * Implements core game logic.
  *
