@@ -92,6 +92,9 @@ public class Ship extends Entity {
 		this.positionX -= SPEED * this.shipEffect.moveEffect();
 	}
 
+	public final void moveTop() { this.positionY -= SPEED * this.shipEffect.moveEffect(); }
+	public final void moveBottom() { this.positionY += SPEED * this.shipEffect.moveEffect(); }
+
 	/**
 	 * Shoots a bullet upwards.
 	 * 
