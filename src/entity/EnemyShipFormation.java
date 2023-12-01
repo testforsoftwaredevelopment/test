@@ -16,9 +16,9 @@ import static java.lang.Math.random;
 
 /**
  * Groups enemy ships into a formation that moves together.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 public class EnemyShipFormation implements Iterable<EnemyShip> {
 
@@ -127,7 +127,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 	/**
 	 * Constructor, sets the initial conditions.
-	 * 
+	 *
 	 * @param gameSettings
 	 *            Current game settings.
 	 */
@@ -352,7 +352,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 	/**
 	 * Associates the formation to a given screen.
-	 * 
+	 *
 	 * @param newScreen
 	 *            Screen to attach.
 	 */
@@ -514,7 +514,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 					if (isAtLeftSide){
 						currentDirection = Direction.RIGHT;
 						this.logger.info("Boss now moving right");
-						}
+					}
 				} else {
 					if (isAtRightSide) {
 						currentDirection = Direction.LEFT;
@@ -578,7 +578,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		int leftMostPoint = 0;
 		int rightMostPoint = 0;
-		
+
 		for (List<EnemyShip> column : this.enemyShips) {
 			if (!column.isEmpty()) {
 				if (leftMostPoint == 0)
@@ -596,7 +596,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 	/**
 	 * Shoots a bullet downwards.
-	 * 
+	 *
 	 * @param bullets
 	 *            Bullets set to add the bullet being shot.
 	 */
@@ -608,15 +608,15 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			this.shootingCooldown.reset();
 			for(EnemyShip shooter : shooters){
 				bullets.add(BulletPool.getBullet(shooter.getPositionX()
-						+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED, 
+								+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED,
 						this.baseAttackDamage)); // (int)(Math.random() * BULLET_SPEED) + 1)
 				soundEffect.playEnemyShootingSound();
 				if(shooter.checkIsBoss()) {
 					bullets.add(BulletPool.getBullet(shooter.getPositionX()
-							+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED, 
+									+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED,
 							SpriteType.EnemyBulletLeft, this.baseAttackDamage));
 					bullets.add(BulletPool.getBullet(shooter.getPositionX()
-							+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED, 
+									+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED,
 							SpriteType.EnemyBulletRight, this.baseAttackDamage));
 
 				}
@@ -626,7 +626,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 	/**
 	 * Destroys a ship.
-	 * 
+	 *
 	 * @param destroyedShip
 	 *            Ship to be destroyed.
 	 */
@@ -669,7 +669,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 	/**
 	 * Destroys a ship.
-	 * 
+	 *
 	 * @param lvEnhanceArea
 	 *            Level Enhanced about Area.
 	 * @param destroyedShip
@@ -711,12 +711,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		}
 		this.shipCount--;
-		this.shipCount -= this.shipsDestroyed; 
+		this.shipCount -= this.shipsDestroyed;
 	}
 
 	/**
 	 * Destorys a ship using Area-enhanced bullets
-	 * 
+	 *
 	 * @param column
 	 *            PositionX of Enemyship destroyed
 	 * @param row
@@ -797,32 +797,32 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			EnemyShip checkShip = column.get(i);
 			if (checkShip != null && !checkShip.isDestroyed())
 				nextShooter = checkShip;
-				break;
+			break;
 		}
 		return nextShooter;
 
 
 	}
 	/**public final EnemyShip getNextShooterForTest(final List<EnemyShip> column, final int row) {
-		List<Integer> indexList = new ArrayList<Integer>();
-		for(int i = 0; i < column.size(); i++){
-			indexList.add(i);
-		}
-		Collections.shuffle(indexList);
-		EnemyShip nextShooter = null;
-		for(int i = 0; i < indexList.size(); i++){
-			EnemyShip checkShip = column.get(indexList.get(i));
-			if (checkShip != null && !checkShip.isDestroyed() && row != i)
-				nextShooter = checkShip;
-		}
+	 List<Integer> indexList = new ArrayList<Integer>();
+	 for(int i = 0; i < column.size(); i++){
+	 indexList.add(i);
+	 }
+	 Collections.shuffle(indexList);
+	 EnemyShip nextShooter = null;
+	 for(int i = 0; i < indexList.size(); i++){
+	 EnemyShip checkShip = column.get(indexList.get(i));
+	 if (checkShip != null && !checkShip.isDestroyed() && row != i)
+	 nextShooter = checkShip;
+	 }
 
-		return nextShooter;
-	}
+	 return nextShooter;
+	 }
 	 */
 
 	/**
 	 * Returns an iterator over the ships in the formation.
-	 * 
+	 *
 	 * @return Iterator over the enemy ships.
 	 */
 	@Override
@@ -838,7 +838,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 	/**
 	 * Checks if there are any ships remaining.
-	 * 
+	 *
 	 * @return True when all ships have been destroyed.
 	 */
 	public final boolean isEmpty() {
