@@ -31,9 +31,9 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/** Proportion of B-type ships. */
 	private static final double PROPORTION_B = 0.4;
 	/** Lateral speed of the formation. */
-	private static final int X_SPEED = 8;
+	private static final int X_SPEED = 2;
 	/** Downwards speed of the formation. */
-	private static final int Y_SPEED = 4;
+	private static final int Y_SPEED = 1;
 	/** Speed of the bullets shot by the members. */
 	private static final int BULLET_SPEED = 4;
 	/** Proportion of differences between shooting times. */
@@ -90,7 +90,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/** Direction the formation was moving previously. */
 	private Direction previousDirection;
 	/** Interval between movements, in frames. */
-	private int movementInterval;
+	private double movementInterval;
 	/** Total width of the formation. */
 	private int width;
 	/** Total height of the formation. */
@@ -131,7 +131,11 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		/** Movement to the left side of the screen. */
 		LEFT,
 		/** Movement to the bottom of the screen. */
-		DOWN
+		DOWN,
+		/** Movement to the up of the screen. */
+		UP,
+		LEFT_DOWN,
+		RIGHT_DOWN
 	};
 
 	/**
@@ -147,7 +151,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			this.drawManager = Core.getDrawManager();
 			this.logger = Core.getLogger();
 			this.enemyShips = new ArrayList<List<EnemyShip>>();
-			this.currentDirection = Direction.RIGHT;
+			this.currentDirection = Direction.RIGHT_DOWN;
 			this.movementInterval = 0;
 			this.nShipsWide = gameSettings.getFormationWidth();
 			this.nShipsHigh = gameSettings.getFormationHeight();
@@ -183,7 +187,6 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 					r2 = rnd.nextInt(100) + 80;
 					g = rnd.nextInt(200);
 					b = rnd.nextInt(200);
-					Color color = new Color(r, g, b);
 					Color A_color = new Color(r, 255, 255);
 					Color B_color = new Color(255, g, 255);
 					Color C_color = new Color(r2, 125, 255);
@@ -389,7 +392,9 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 * Updates the position of the ships.
 	 */
 	public final void update() {
-		if(!this.isboss) {
+		if(!this.isboss) { // not boss.
+
+			// shooting cooldown.
 			if (this.shootingCooldown == null) {
 				this.shootingCooldown = Core.getVariableCooldown(shootingInterval,
 						shootingVariance);
@@ -400,106 +405,80 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 			int movementX = 0;
 			int movementY = 0;
-			double remainingProportion = (double) this.shipCount
-					/ (this.nShipsHigh * this.nShipsWide);
-			this.movementSpeed = (int) (Math.pow(remainingProportion, 2)
-					* this.baseSpeed);
-			this.movementSpeed += MINIMUM_SPEED;
 
-			movementInterval++;
-			if (movementInterval >= this.movementSpeed) {
-				movementInterval = 0;
-				if(extend_check== NotExtend_location){
-					isExtend = true;
-				}
-				if(extend_check== IsSExtend_location){
-					isExtend = false;
-				}
+			movementInterval += 0.05;
 
-				boolean isAtBottom = positionY
-						+ this.height > screen.getHeight() - BOTTOM_MARGIN;
-				boolean isAtRightSide = positionX
-						+ this.width >= screen.getWidth() - SIDE_MARGIN;
-				boolean isAtLeftSide = positionX <= SIDE_MARGIN;
-				boolean isAtHorizontalAltitude = ((positionY+extend_check-1) % DESCENT_DISTANCE ==0);
+			boolean isAtTop = positionY > BOTTOM_MARGIN;
+			/*boolean isAtBottom = positionY
+					+ this.height > screen.getHeight() - BOTTOM_MARGIN;*/
+			boolean isAtRightSide = positionX
+					+ this.width >= screen.getWidth() - SIDE_MARGIN;
+			boolean isAtLeftSide = positionX <= SIDE_MARGIN;
 
-				if (currentDirection == Direction.DOWN) {
-					if (isAtHorizontalAltitude)
-						if (previousDirection == Direction.RIGHT) {
-							currentDirection = Direction.LEFT;
-							this.logger.info("Formation now moving left 1");
-						} else {
-							currentDirection = Direction.RIGHT;
-							this.logger.info("Formation now moving right 2");
-						}
-				} else if (currentDirection == Direction.LEFT) {
-					if (isAtLeftSide)
-						if (!isAtBottom) {
-							previousDirection = currentDirection;
-							currentDirection = Direction.DOWN;
-							this.logger.info("Formation now moving down 3");
-						} else {
-							currentDirection = Direction.RIGHT;
-							this.logger.info("Formation now moving right 4");
-						}
-				} else {
-					if (isAtRightSide)
-						if (!isAtBottom) {
-							previousDirection = currentDirection;
-							currentDirection = Direction.DOWN;
-							this.logger.info("Formation now moving down 5");
-						} else {
-							currentDirection = Direction.LEFT;
-							this.logger.info("Formation now moving left 6");
-						}
-				}
-				if (currentDirection == Direction.RIGHT) {
-					if (isExtend)
-						movementExtend = Extend_x;
-					else
-						movementExtend = -Extend_x;
-					movementX = X_SPEED;
-				}
-				else if (currentDirection == Direction.LEFT) {
-					if (isExtend)
-						movementExtend = Extend_x;
-					else
-						movementExtend = -Extend_x;
-					movementX = -X_SPEED;
-				}
-				else {
-					movementExtend = 0;
-					movementY = Y_SPEED;
-				}
-				positionX += movementX;
-				positionX += movementExtend;
-				extend_check += movementExtend;
-				positionY += movementY;
-				positionY += movementExtend;
-				// Cleans explosions.
-				List<EnemyShip> destroyed;
-				for (List<EnemyShip> column : this.enemyShips) {
-					destroyed = new ArrayList<EnemyShip>();
-					for (EnemyShip ship : column) {
-						if (ship != null && ship.isDestroyed()) {
-							destroyed.add(ship);
-							this.logger.info("Removed enemy "
-									+ column.indexOf(ship) + " from column "
-									+ this.enemyShips.indexOf(column));
-						}
+
+			// cur-direcection is down.
+			if (currentDirection == Direction.UP) {
+				// this.logger.info("#moving : up ");
+				if(previousDirection == Direction.RIGHT_DOWN){
+					if(!isAtTop) {
+						//this.logger.info("# right down -> up -> to left down");
+						currentDirection = Direction.LEFT_DOWN;
+						movementInterval = 0.5;
 					}
-					column.removeAll(destroyed);
+				}else if(previousDirection == Direction.LEFT_DOWN){
+					if(!isAtTop) {
+						//this.logger.info("# left down -> up -> to right down");
+						currentDirection = Direction.RIGHT_DOWN;
+						movementInterval = 0.5;
+					}
 				}
 
-				for (List<EnemyShip> column : this.enemyShips)
-					for (EnemyShip enemyShip : column) {
-						enemyShip.move(movementX+movementExtend*(-enemyShips.indexOf(column)+enemyShips.indexOf(nShipsWide/2)),
-								movementY+movementExtend*(-column.indexOf(enemyShip)+enemyShips.indexOf(nShipsHigh/2)));
-						enemyShip.update();
-					}
+			} else if (currentDirection == Direction.LEFT_DOWN) {
+				if (isAtLeftSide) {
+					previousDirection = currentDirection;
+					currentDirection = Direction.UP;
+				}
+			} else if (currentDirection == Direction.RIGHT_DOWN) { // cur-direcection is Right.
+				if (isAtRightSide) {
+					previousDirection = currentDirection;
+					currentDirection = Direction.UP;
+				}
 			}
+			if (currentDirection == Direction.RIGHT_DOWN) {
+				movementX = X_SPEED * ((int)movementInterval < 0 ? 1 : (int)movementInterval);
+				movementY = Y_SPEED * ((int)movementInterval < 0 ? 1 : (int)movementInterval);
+			}
+			else if (currentDirection == Direction.LEFT_DOWN) {
+				movementX = -X_SPEED  * ((int)movementInterval < 0 ? 1 : (int)movementInterval);
+				movementY = Y_SPEED * ((int)movementInterval < 0 ? 1 : (int)movementInterval);
+			} else if (currentDirection == Direction.UP){
+				movementY = -Y_SPEED * (int)movementInterval;
+			}
+			// this.logger.info("# now movementinterval is " + movementInterval);
+			positionX += movementX;
+			positionY += movementY;
+			// Cleans explosions.
+			List<EnemyShip> destroyed;
+			for (List<EnemyShip> column : this.enemyShips) {
+				destroyed = new ArrayList<EnemyShip>();
+				for (EnemyShip ship : column) {
+					if (ship != null && ship.isDestroyed()) {
+						destroyed.add(ship);
+						this.logger.info("Removed enemy "
+								+ column.indexOf(ship) + " from column "
+								+ this.enemyShips.indexOf(column));
+					}
+				}
+				column.removeAll(destroyed);
+			}
+
+			for (List<EnemyShip> column : this.enemyShips)
+				for (EnemyShip enemyShip : column) {
+					enemyShip.move(movementX, movementY);
+					enemyShip.update();
+				}
 		}
-		else {
+		else { // when the boss.
 			if (this.shootingCooldown == null) {
 				this.shootingCooldown = Core.getVariableCooldown(shootingInterval,
 						shootingVariance);
@@ -510,8 +489,6 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 			int movementX = 0;
 			int movementY = 0;
-			double remainingProportion = (double) this.shipCount
-					/ (this.nShipsHigh * this.nShipsWide);
 			this.movementSpeed = this.baseSpeed;
 
 			movementInterval++;
