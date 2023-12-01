@@ -20,7 +20,8 @@ public class BulletEffect extends Effect {
     /**
      * when kill enemy, bullet is diverged with two with speed -1
      */
-    public void splashEffect(Set<Bullet> bullets){
+    public void
+    splashEffect(Set<Bullet> bullets){
         if (!this.buffSplashEffectCooldown.checkFinished()) {
             Bullet n1, n2;
             n1 = BulletPool.getBullet(bullet.getPositionX() + bullet.getWidth() / 2 + 15, bullet.getPositionY(), -1, bullet.getDamage());

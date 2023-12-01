@@ -748,6 +748,7 @@ public class GameScreen extends Screen {
 						}
 						recyclableBullet.add(bullet);
 					}
+
 				}
 				if (bullet.getPositionY()<50){
 					combo =0;
@@ -778,6 +779,43 @@ public class GameScreen extends Screen {
 					Miss =1;
 				}
 			}
+
+		if(!this.ship.isDestroyed()){
+			for (Bullet bullet : this.bullets) {
+				if (this.ship.getShieldState()){
+					this.ship.setShieldState(false);
+				} else {
+					if (!this.ship.isDestroyed()) {
+						this.ship.destroy();
+						if (this.lives != 1) soundEffect.playShipCollisionSound();
+						this.lives--;
+						if (gameSettings.getDifficulty() == 3) this.lives = 0;
+						this.logger.info("Hit on player ship, " + this.lives
+								+ " lives remaining.");
+					}
+				}
+				for(EnemyShip enemyShip : this.enemyShipFormation){
+					if(checkCollision(this.ship, enemyShip)){
+						enemyShip.reduceEnemyLife(bullet.getDamage()); // 수정
+						this.logger.info("Attack the enemy with " + bullet.getDamage()
+								+ " of damage.");
+						soundEffect.playEnemyDestructionSound();
+						this.combo++;
+						this.score += combo;
+						this.Miss =1;
+						if(enemyShip.getEnemyLife() < 1) {
+							this.score += enemyShip.getPointValue();
+							this.enemyShipFormation.destroy(enhanceManager.getlvEnhanceArea(), enemyShip, this.items);
+							this.shipsDestroyed++;
+							this.shipsDestroyed += this.enemyShipFormation.getShipsDestroyed();
+							this.logger.info("Current Number of Ships Destroyed : " + this.shipsDestroyed);
+							// if(){ this.levelFinished = True; }
+						}
+						recyclableBullet.add(bullet);
+					}
+				}
+			}
+		}
 		if (this.laser != null) {
 			if (checkCollision(this.laser, this.ship) && !this.levelFinished) {
 				if (!this.ship.isDestroyed()) {
