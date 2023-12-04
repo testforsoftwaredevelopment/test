@@ -406,6 +406,16 @@ public final class DrawManager {
 		// drawGrid(screen);
 	}
 
+	public void drawUIBackground(final Screen screen, final int line){
+		backBufferGraphics.setColor(Color.BLACK);
+		backBufferGraphics
+				.fillRect(0, 0, screen.getWidth(), line);
+
+		fontSmallMetrics = backBufferGraphics.getFontMetrics(fontSmall);
+		fontRegularMetrics = backBufferGraphics.getFontMetrics(fontRegular);
+		fontBigMetrics = backBufferGraphics.getFontMetrics(fontBig);
+	}
+
 	/**
 	 * Draws the completed drawing on screen.
 	 *
@@ -2697,7 +2707,7 @@ if (option == 35)
 		}
 
 		Graphics2D g2 = (Graphics2D)backBufferGraphics;
-		GradientPaint gp = new GradientPaint(0, separationLineHeight, new Color(31, 0, 0, 216), 0, height, new Color(brightness,brightness/2,100+brightness/2,230));
+		GradientPaint gp = new GradientPaint(0, separationLineHeight, new Color(0, 0, 0, 216), 0, height, new Color(brightness,brightness/2,100+brightness/2,230));
 		g2.setPaint(gp);
 		g2.fill(new Rectangle(0, separationLineHeight, width, height));
 

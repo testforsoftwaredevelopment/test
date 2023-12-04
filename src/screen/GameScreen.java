@@ -563,6 +563,7 @@ public class GameScreen extends Screen {
 					bulletY.getPositionY());
 
 		// Interface.
+		drawManager.drawUIBackground(this, SEPARATION_LINE_HEIGHT);
 		drawManager.drawScore(this, this.score);
 		drawManager.drawLivesbar(this, this.lives);
 		drawManager.drawCoin(this, this.coin, 0);
